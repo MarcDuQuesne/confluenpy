@@ -37,7 +37,7 @@ jobs:
       run: poetry run pytest
 
   build:
-    needs: run-tests
+    needs: tests
     runs-on: ubuntu-latest
     steps:
 
@@ -57,7 +57,7 @@ jobs:
 
 
   bump:
-    needs: run-tests
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Bump version
