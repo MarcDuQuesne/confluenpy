@@ -2,7 +2,7 @@
 Module to convert markdown to confluence wiki markup.
 """
 
-from confluenpy.core.content import PageContent
+from confluenpy.content import PageContent
 
 
 class MarkdownToConfluenceConverter:
