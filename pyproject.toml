@@ -9,10 +9,23 @@ readme = "README.md"
 python = "^3.8"
 atlassian-python-api = "^3.41.9"
 
-
 [tool.poetry.group.dev.dependencies]
 pylint = "^3.0.3"
 pytest = "^8.0.0"
+isort = "^5.13.2"
+black = "^24.1.1"
+
+[tool.black]
+line-length = 150
+
+[tool.isort]
+profile = "black"
+
+[tool.pylint]
+max-line-length = 150
+disable = """
+    redefined-outer-name
+"""
 
 [build-system]
 requires = ["poetry-core"]
