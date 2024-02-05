@@ -68,7 +68,7 @@ class MarkdownToConfluenceConverter:
 
             elif cls.is_block_code(line):
                 # Simple approach to capture code block, assuming it starts and ends in the file correctly
-                language = line.replace('```', '').strip() or 'java' # TODO
+                language = line.replace('```', '').strip()
                 code_content = []
                 line = next(lines)  # Move to the next line to start capturing the code
                 while not cls.is_block_code(line):

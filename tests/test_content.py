@@ -35,7 +35,7 @@ def page(confluence: atlassian.Confluence):
 
 
 @pytest.mark.unit
-def test_page_elements(page: Page):  # TODO add more tests
+def test_page_elements(page: Page):
     """
     Test creating a page
     """

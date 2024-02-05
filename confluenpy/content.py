@@ -149,7 +149,9 @@ class MacrosMixin:
         """
         exclude_str = f'|exclude={exclude}' if exclude else ''
         include_str = f'|include={include}' if include else ''
-        self.content.append(f'{{toc:printable={printable}|style={style}|maxLevel={max_level}|indent={indent}|minLevel={min_level}|class={_class}{exclude_str}|type={_type}|outline={outline}|{include_str}}}')
+        self.content.append(f'{{toc:printable={printable}|style={style}|maxLevel={max_level}|indent={indent}|'
+                    f'minLevel={min_level}|class={_class}{exclude_str}|type={_type}|outline={outline}|'
+                    f'{include_str}}}')
 
 
     def code_block(self,
@@ -157,7 +159,10 @@ class MacrosMixin:
                    content:str,
                    theme: Literal['DJango','Emacs','FadeToGrey','Midnight','RDark','Eclipse','Confluence', 'Default'] = 'Default',
                    linenumbers: bool = False,
-                   language: Literal['ActionScript','AppleScript','Bash','C#','C++','CSS','ColdFusion','Delphi','Diff','Erlang','Groovy','HTML and XML','Java','Java FX','JavaScript','PHP','Plain Text','PowerShell','Python','Ruby','SQL','Sass','Scala','Visual Basic','YAML'] = 'java',
+                   language: Literal['ActionScript','AppleScript','Bash','C#','C++',
+                                     'CSS','ColdFusion','Delphi','Diff','Erlang',
+                                     'Groovy','HTML and XML','Java','Java FX','JavaScript',
+                                     'PHP','Plain Text','PowerShell','Python','Ruby','SQL','Sass','Scala','Visual Basic','YAML'] = 'java',
                    firstline: int = 1,
                    collapse: bool = False):
         """
@@ -166,7 +171,9 @@ class MacrosMixin:
         example: {code:title=This is my title|theme=FadeToGrey|linenumbers=true|language=java|firstline=0001|collapse=true}
         """
 
-        self.content.append(f'{{code:title={title}|theme={theme}|linenumbers={linenumbers}|language={language}|firstline={firstline}|collapse={collapse}}}{content}{{code}}')
+        self.content.append(f'{{code:title={title}|theme={theme}|linenumbers={linenumbers}|'
+                            f'language={language}|firstline={firstline}|collapse={collapse}}}'
+                            f'{content}{{code}}')
 
 
 class PageContent(MacrosMixin):
@@ -300,16 +307,6 @@ class PageContent(MacrosMixin):
         self.content.append(text)
 
 
-    def a(self, text, href=None):
-        link_str = f'[{text}|{href}]' if href else text
-        self.content.append(link_str)
-
-    def img(self, src=None, alt=None):
-        img_str = f'!{src}!' if src else ''
-        if alt:
-            img_str = f'{img_str}|alt={alt}'
-        self.content.append(img_str)
-
     def render(self):
         """
         Render the page content.
@@ -345,5 +342,12 @@ class Page:
         returns:
         status: dict - The status of the page update.
         """
-        status = self.confluence.update_page(page_id=self.page_id, title='Digital Bioprocess Labs', body=self.body.render(), parent_id=None, type='page', representation='wiki', minor_edit=minor_edit, full_width=full_width)
+        status = self.confluence.update_page(page_id=self.page_id,
+                                             title=self.title,
+                                             body=self.body.render(),
+                                             parent_id=None,
+                                             type='page',
+                                             representation='wiki',
+                                             minor_edit=minor_edit,
+                                             full_width=full_width)
         return status
