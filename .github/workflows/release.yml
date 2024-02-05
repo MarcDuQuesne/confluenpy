@@ -65,6 +65,10 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
+      - name: Install dependencies (Cache)
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry
       - name: Bump version
         run: |
           NEW_VERSION="v$(poetry version patch | awk '{print $NF}')"
