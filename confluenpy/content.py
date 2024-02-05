@@ -119,7 +119,7 @@ class MacrosMixin:
     see https://confluence.atlassian.com/doc/macros-139387.html
     """
 
-    def toc(self,
+    def toc(self,  # pylint: disable=too-many-arguments
             printable:bool=False,
             style: Literal['square'] = 'square',
             max_level: int=4, indent="5px",
@@ -154,7 +154,7 @@ class MacrosMixin:
                     f'{include_str}}}')
 
 
-    def code_block(self,
+    def code_block(self,  # pylint: disable=too-many-arguments
                    title:str,
                    content:str,
                    theme: Literal['DJango','Emacs','FadeToGrey','Midnight','RDark','Eclipse','Confluence', 'Default'] = 'Default',
@@ -327,10 +327,28 @@ class Page:
         self.title = title
         self.space = space
         self.confluence = confluence
-        self.page_id = confluence.get_page_id(self.space, self.title)
         self.body = PageContent()
 
-    def update(self, minor_edit: bool = False, full_width: bool = False):
+    @property
+    def page_id(self):
+        """
+        Get the page ID.
+
+        returns:
+        page_id: int - The page ID.
+        """
+        return self.confluence.get_page_id(self.space, self.title)
+
+    def page_exists(self) -> bool:
+        """
+        Check if a page exists in Confluence.
+
+        returns:
+        exists: bool - Whether the page exists.
+        """
+        return self.confluence.page_exists(space=self.space, title=self.title, type='page')
+
+    def update(self, minor_edit: bool = False, full_width: bool = False) -> dict:
         """
         Update the body of a page in Confluence.
 

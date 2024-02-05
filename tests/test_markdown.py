@@ -16,8 +16,8 @@ def test_conversion():
     Check that the readme for this project can be added to a confluence page.
     """
 
-    README = Path(__file__).parent.parent / 'README.md'
+    readme = Path(__file__).parent.parent / 'README.md'
 
-    with README.open(encoding='utf-8') as markdown_text:
+    with readme.open(encoding='utf-8') as markdown_text:
         markdown = MarkdownToConfluenceConverter.convert(markdown_text.read())
         assert isinstance(markdown, PageContent)
