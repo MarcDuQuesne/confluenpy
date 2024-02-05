@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "confluenpy"
-version = "0.1.1"
+version = "0.1.2"
 description = ""
 authors = ["Matteo Giani <matteo.giani.87@gmail.com>"]
 readme = "README.md"
