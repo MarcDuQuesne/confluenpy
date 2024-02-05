@@ -6,3 +6,5 @@ test-reports/
 .coverage
 
 .env
+
+dist/
