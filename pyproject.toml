@@ -34,7 +34,7 @@ addopts = """
 """
 
 xfail_strict = true
-testpaths = "src/tests"
+testpaths = "tests"
 markers = """
     unit: unit test
     integration: integration test
