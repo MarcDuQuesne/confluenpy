@@ -135,7 +135,7 @@ class MarkdownToConfluenceConverter:
                     assert validators.url(url), f"Invalid URL: {url}"
                     confluence_content.image(url)
                 except AssertionError as err:
-                    logger.error(f"Invalid URL: {url}: {err}")
+                    logger.error("Invalid URL %s: %s", url, err)
             else:
                 confluence_content.text(line)  # Treat as plain text
 

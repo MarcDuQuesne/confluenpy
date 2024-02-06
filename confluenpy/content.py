@@ -119,8 +119,9 @@ class MacrosMixin:
     see https://confluence.atlassian.com/doc/macros-139387.html
     """
 
+    # pylint: disable=too-many-arguments
     def toc(
-        self,  # pylint: disable=too-many-arguments
+        self,
         printable: bool = False,
         style: Literal["square"] = "square",
         max_level: int = 4,
@@ -259,6 +260,7 @@ class PageContent(MacrosMixin, TextFormattingMixin):
         """
         self.content.append("----")
 
+    # pylint: disable=too-many-arguments
     def image(
         self,
         url: str,
@@ -288,7 +290,7 @@ class PageContent(MacrosMixin, TextFormattingMixin):
         :param alt: Specifies alternate text for the image for accessibility and is retrievable via search. Optional.
 
         Example usage:
-            image(title="My image", url="http://www.example.com/image.jpg", align="center", border=5, bordercolor="black", hspace=10, vspace=10, width=200, height=100, alt="example")
+            image(title="My image", url="http://www.example.com/image.jpg")
         """
 
         title = f"title={title}" if title else ""
