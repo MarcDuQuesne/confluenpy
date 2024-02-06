@@ -6,9 +6,10 @@ authors = ["Matteo Giani <matteo.giani.87@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 atlassian-python-api = "^3.41.9"
 pytest-mock = "^3.12.0"
+validators = "^0.22.0"
 
 [tool.poetry.group.dev.dependencies]
 pylint = "^3.0.3"
@@ -16,6 +17,8 @@ pytest = "^8.0.0"
 isort = "^5.13.2"
 black = "^24.1.1"
 pytest-cov = "^4.1.0"
+pre-commit = "^3.6.0"
+python-dotenv = "^1.0.1"
 
 [tool.black]
 line-length = 150
