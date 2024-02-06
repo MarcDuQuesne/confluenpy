@@ -7,7 +7,7 @@ from pathlib import Path
 import atlassian
 import pytest
 
-from confluenpy.content import Page, PageContent
+from confluenpy.content import Page
 from confluenpy.markdown import MarkdownToConfluenceConverter
 
 
