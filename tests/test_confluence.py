@@ -10,6 +10,8 @@ import pytest
 from confluenpy.content import Page
 from confluenpy.markdown import MarkdownToConfluenceConverter
 
+requires_existing_confluence = pytest.mark.skipif("CONFLUENCE_API_TOKEN" not in os.environ, reason="No Confluence API token set")
+
 
 @pytest.fixture
 def confluence():
@@ -22,6 +24,7 @@ def confluence():
 
 
 @pytest.mark.end_to_end
+@requires_existing_confluence
 def test_publish_page(confluence: atlassian.Confluence):
     """
     Test publishing a page to confluence
