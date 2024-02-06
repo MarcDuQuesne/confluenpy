@@ -71,6 +71,7 @@ jobs:
           pip install poetry
       - name: Bump version
         run: |
+          git pull
           NEW_VERSION="v$(poetry version patch | awk '{print $NF}')"
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
