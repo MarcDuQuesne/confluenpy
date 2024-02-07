@@ -38,4 +38,4 @@ def test_convert_link():
     """
     Test the conversion of links.
     """
-    assert MarkdownToConfluenceConverter.convert_link("[Link](link)") == "[link]"
+    assert MarkdownToConfluenceConverter.convert_link("[Link](link)") == "[Link|link]"
