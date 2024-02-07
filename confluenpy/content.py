@@ -458,3 +458,19 @@ class Page:
             full_width=full_width,
         )
         return status
+
+    def attach_content(self, content: str, name: str, content_type: str = "application/binary", comment: Optional[str] = None) -> dict:
+        """
+        Attach content to a page in Confluence.
+
+        params:
+        content: string - The content to attach.
+        name: string - The filename of the content.
+        content_type: string - The type of the content.
+        comment: string - The comment for the attachment.
+        """
+        status = self.confluence.attach_content(
+            content=content, name=name, content_type=content_type, page_id=self.page_id, title=self.title, space=self.space, comment=comment
+        )
+
+        return status

@@ -4,6 +4,7 @@ Module to convert markdown to confluence wiki markup.
 
 import logging
 import re
+from pathlib import Path
 
 import validators
 
@@ -17,27 +18,7 @@ class MarkdownToConfluenceConverter:
     Class to convert markdown to confluence wiki markup.
     """
 
-    @staticmethod
-    def is_header(text: str) -> bool:
-        """
-        Check if the given string is a header according to specific rules.
-        A string is considered a header if it starts with one or more '#' characters
-        followed immediately by a space and then any characters.
-
-        Parameters:
-        s (str): The string to check.
-
-        Returns:
-        bool: True if the string is a header, False otherwise.
-        """
-        # Check if the string starts with '#' and has a space after the '#' characters
-        if text.startswith("#"):
-            # Find the index of the first space after the initial '#' characters
-            space_index = text.find(" ")
-            # Check if there's a space and it's immediately after the '#' characters
-            if space_index > 0 and all(char == "#" for char in text[:space_index]):
-                return True
-        return False
+    local_images_to_be_uploaded = []
 
     @staticmethod
     def is_block_code(text: str) -> bool:
@@ -62,7 +43,7 @@ class MarkdownToConfluenceConverter:
         example: ![Drag Racing](Dragster.jpg)
 
         Parameters:
-        s (str): The string to check.
+        s (str): The string to check
 
         Returns:
         bool: True if the string is an image, False otherwise.
@@ -70,7 +51,45 @@ class MarkdownToConfluenceConverter:
         return re.match(r".*\!\[.*\]\(.*\.(jpg|jpeg|png|gif|bmp|svg.*)\).*", text)
 
     @staticmethod
-    def emphasis(text: str) -> str:
+    def convert_image(text: str) -> str:
+        """
+        Convert a Markdown image to Confluence Wiki markup image.
+
+        example: ![Drag Racing](Dragster.jpg)
+
+        Args:
+        text (str): A string containing an image in Markdown format.
+
+        Returns:
+        str: A string containing the image in Confluence Wiki markup format.
+        """
+
+        # Regular expression to match Markdown image format and convert to Confluence Wiki markup
+        match_regex = r"!\[(.*?)\]\((.*\.(jpg|jpeg|png|gif|bmp|svg)[^\)]*)?\)"
+
+        # search for the image in the text
+        for match in re.findall(match_regex, text):
+            # Extract the image title and url
+            _title = match[0]
+            url = match[1]
+            try:
+                assert validators.url(url), f"Invalid URL: {url}"
+                text = re.sub(match_regex, f"!{url}!", text)
+            except AssertionError as err:
+                # check if the image is local
+                local_file = Path(url)
+                if Path(url).exists():
+                    logger.warning("Local image detected: %s", url)  # MG possible issue with path. Is this the relative path to the markdown?
+                    text = re.sub(match_regex, f"!{local_file.name}!", text)
+                    # add the local image to the list of images to be uploaded
+                    MarkdownToConfluenceConverter.local_images_to_be_uploaded.append(local_file)
+                else:
+                    logger.error("Invalid URL %s: %s", url, err)
+
+        return text
+
+    @staticmethod
+    def convert_emphasis(text: str) -> str:
         """
         Transforms text by replacing single backticks around words with underscores,
         while leaving text within triple backticks unchanged.
@@ -93,6 +112,41 @@ class MarkdownToConfluenceConverter:
 
         return final_text
 
+    @staticmethod
+    def convert_link(text: str) -> str:
+        """
+        Convert a Markdown link to Confluence Wiki markup link.
+
+        Args:
+        link_markdown (str): A string containing a link in Markdown format.
+
+        Returns:
+        str: A string containing the link in Confluence Wiki markup format.
+        """
+        # Regular expression to match Markdown link format
+        # markdown_link_pattern = r'\[([^\]]+)\]\(([^)]+)\)'
+        # matches = re.findall(markdown_link_pattern, text)
+
+        # converted_line = re.sub(r"\[.*\]\((http[s]?[^)]+)\)", r"['\1]", text)
+        converted_line = re.sub(r"\[(.*)\]\((.*)\)", r"[\1|\2]", text)
+        return converted_line
+
+    @staticmethod
+    def convert_header(text: str) -> str:
+        """
+        Convert a Markdown header to Confluence Wiki markup header.
+
+        Args:
+        text (str): A string containing a header in Markdown format.
+
+        Returns:
+        str: A string containing the header in Confluence Wiki markup format.
+        """
+        # Regular expression to match Markdown header format and convert to Confluence Wiki markup
+        converted_line = re.sub(r"^(#+)\s*(.*?)$", lambda m: f"h{len(m.group(1))}. {m.group(2)}", text)
+
+        return converted_line
+
     @classmethod
     def convert(cls, markdown_text: str) -> PageContent:
         """
@@ -110,13 +164,12 @@ class MarkdownToConfluenceConverter:
         lines = iter(markdown_text.split("\n"))
         for line in lines:
 
-            line = cls.emphasis(line)
+            line = cls.convert_emphasis(line)
+            line = cls.convert_image(line)
+            line = cls.convert_link(line)
+            line = cls.convert_header(line)
 
-            if cls.is_header(line):
-                n_hashes = line.split(" ")[0].count("#")
-                confluence_content.heading(f"h{n_hashes}", line[n_hashes + 1 :])
-
-            elif cls.is_block_code(line):
+            if cls.is_block_code(line):
                 # Simple approach to capture code block, assuming it starts and ends in the file correctly
                 language = line.replace("```", "").strip()
                 code_content = []
@@ -125,17 +178,17 @@ class MarkdownToConfluenceConverter:
                     code_content.append(line)
                     line = next(lines)
                 confluence_content.code_block(title="", content="\n".join(code_content), language=language)
-            elif cls.is_image(line):
-                image = re.search(r"(\!\[.*\]\(.*\.(jpg|jpeg|png|gif|bmp|svg\??[a-z=]*)\))", line).group(0)
-                # Extract the image title and url
-                url = re.search(r"\((.*)\)", image).group(1)
-                _title = re.search(r"\[(.*)\]", image).group(1)
+            # elif cls.is_image(line):
+            #     image = re.search(r"(\!\[.*\]\(.*\.(jpg|jpeg|png|gif|bmp|svg\??[a-z=]*)\))", line).group(0)
+            #     # Extract the image title and url
+            #     url = re.search(r"\((.*)\)", image).group(1)
+            #     _title = re.search(r"\[(.*)\]", image).group(1)
 
-                try:
-                    assert validators.url(url), f"Invalid URL: {url}"
-                    confluence_content.image(url)
-                except AssertionError as err:
-                    logger.error("Invalid URL %s: %s", url, err)
+            #     try:
+            #         assert validators.url(url), f"Invalid URL: {url}"
+            #         confluence_content.image(url)
+            #     except AssertionError as err:
+            #         logger.error("Invalid URL %s: %s", url, err)
             else:
                 confluence_content.text(line)  # Treat as plain text
 
