@@ -50,6 +50,14 @@ def test_publish_page(confluence: atlassian.Confluence):
         markdown = MarkdownToConfluenceConverter.convert(markdown_text.read())
         page.body.extend(markdown)
 
-    # Update the page
+    # Upload any local images referenced in the markdown
+    for file in MarkdownToConfluenceConverter.local_images_to_be_uploaded:
+        page.attach_content(
+            content=file.open("rb"),
+            name=file.name,
+        )
+
+    # Finally, Update the page
     status = page.update()
+
     assert status["type"] == "page", status
