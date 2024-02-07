@@ -65,6 +65,7 @@ The `MarkdownToConfluenceConverter` class allows to convert markdown to confluen
 
     - headings
     - code blocks
-    - public images
+    - images (both public and local to the repository, see the example above)
+    - links
 
-Regular markup notation is also supported (bold, italic).
+Regular markup notation is also supported (bold, italic..).
