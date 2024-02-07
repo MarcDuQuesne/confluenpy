@@ -5,7 +5,7 @@ ConfluenPy is a Python package that allows you to interact with Atlassian Conflu
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 ![pylint](https://github.com/MarcDuQuesne/confluenpy/actions/workflows/pylint.yml/badge.svg?branch=main)
 ![Build/Release](https://github.com/MarcDuQuesne/confluenpy/actions/workflows/release.yml/badge.svg?branch=main)
-![Coverage](.github/coverage.svg)
+![Coverage](https://raw.githubusercontent.com/MarcDuQuesne/confluenpy/main/.github/coverage.svg)
 
 # Example usage
 
@@ -28,6 +28,13 @@ ConfluenPy is a Python package that allows you to interact with Atlassian Conflu
         markdown = MarkdownToConfluenceConverter.convert(markdown_text.read())
         # Only takes the second section of the markdown file
         page.body.content += markdown.section(2)
+
+    # Upload any local images referenced in the markdown
+    for file in MarkdownToConfluenceConverter.local_images_to_be_uploaded:
+        page.attach_content(
+            content=file.open("rb"),
+            name=file.name,
+        )
 
     # Adds some more content
     page.body.heading('h1', "Biggest heading")

@@ -50,6 +50,7 @@ def test_publish_page(confluence: atlassian.Confluence):
         markdown = MarkdownToConfluenceConverter.convert(markdown_text.read())
         page.body.extend(markdown)
 
+    # Upload any local images referenced in the markdown
     for file in MarkdownToConfluenceConverter.local_images_to_be_uploaded:
         page.attach_content(
             content=file.open("rb"),
