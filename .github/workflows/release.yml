@@ -10,8 +10,6 @@ name: Publish Release
 
 on:
   push:
-    branches:
-      - main
     tags:
       - "*"
 
@@ -58,7 +56,7 @@ jobs:
   #         prerelease: false
 
   pypi-release:
-    needs: bump
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

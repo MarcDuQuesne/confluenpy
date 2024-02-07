@@ -6,7 +6,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Tag Release
+name: Tag and Release
 
 on:
   push:
@@ -37,7 +37,6 @@ jobs:
   bump:
     needs:
       - build
-      - tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
