@@ -4,7 +4,7 @@ ConfluenPy is a Python package that allows you to interact with Atlassian Conflu
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 ![pylint](https://github.com/MarcDuQuesne/confluenpy/actions/workflows/pylint.yml/badge.svg?branch=main)
-![Build/Release](https://github.com/MarcDuQuesne/confluenpy/actions/workflows/release.yml/badge.svg?branch=main)
+![Build/Release](https://github.com/MarcDuQuesne/confluenpy/actions/workflows/tag-and-release.yml/badge.svg?branch=main)
 ![Coverage](https://raw.githubusercontent.com/MarcDuQuesne/confluenpy/main/.github/coverage.svg)
 
 # Example usage
