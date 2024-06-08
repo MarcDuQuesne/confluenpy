@@ -23,6 +23,41 @@ def test_conversion():
         assert isinstance(markdown, PageContent)
 
 
+@pytest.mark.integration
+def test_string_conversion():
+    """
+    Check that the readme for this project can be added to a confluence page.
+    """
+
+    markdown = """
+# Header
+
+## Header
+
+- list level 1
+  - list level 2
+
+1. numbered list 1
+2. numbered list 2
+"""
+
+    wiki_markdown = """
+h1. Header
+
+h2. Header
+
+* list level 1
+** list level 2
+
+# numbered list 1
+## numbered list 2
+"""
+
+    converted_markup = "\n".join(MarkdownToConfluenceConverter.convert(markdown).content)
+
+    assert converted_markup == wiki_markdown, "Conversion failed"
+
+
 @pytest.mark.unit
 def test_convert_header():
     """
@@ -31,6 +66,17 @@ def test_convert_header():
     assert MarkdownToConfluenceConverter.convert_header("# Header") == "h1. Header"
     assert MarkdownToConfluenceConverter.convert_header("## Header") == "h2. Header"
     assert MarkdownToConfluenceConverter.convert_header("## Header ##") == "h2. Header ##"
+
+
+@pytest.mark.unit
+def test_convert_list():
+    """
+    Test the conversion of headers.
+    """
+    assert MarkdownToConfluenceConverter.convert_list("- element") == "* element"
+    assert MarkdownToConfluenceConverter.convert_list("  - element") == "** element"
+    assert MarkdownToConfluenceConverter.convert_list("1. element") == "# element"
+    assert MarkdownToConfluenceConverter.convert_list("2. element") == "## element"
 
 
 @pytest.mark.unit
