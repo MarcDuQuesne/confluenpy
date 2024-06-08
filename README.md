@@ -67,5 +67,42 @@ The `MarkdownToConfluenceConverter` class allows to convert markdown to confluen
     - code blocks
     - images (both public and local to the repository, see the example above)
     - links
+    - lists (ordered and unordered)
 
 Regular markup notation is also supported (bold, italic..).
+
+### Example:
+
+This content:
+
+```markdown
+# Header
+
+## Header
+
+- list level 1
+- list level 2
+
+1. numbered list 1
+2. numbered list 2
+
+[here](https://www.google.com)
+![excalidraw](excalidraw.png)
+```
+
+will be converted to:
+
+```confluence
+h1. Header
+
+h2. Header
+
+* list level 1
+** list level 2
+
+# numbered list 1
+## numbered list 2
+
+[here|https://www.google.com]
+![excalidraw|excalidraw.png]
+```

@@ -39,6 +39,10 @@ def test_string_conversion():
 
 1. numbered list 1
 2. numbered list 2
+
+[here](https://www.google.com)
+![excalidraw](excalidraw.png)
+
 """
 
     wiki_markdown = """
@@ -51,6 +55,10 @@ h2. Header
 
 # numbered list 1
 ## numbered list 2
+
+[here|https://www.google.com]
+![excalidraw|excalidraw.png]
+
 """
 
     converted_markup = "\n".join(MarkdownToConfluenceConverter.convert(markdown).content)
@@ -74,6 +82,8 @@ def test_convert_list():
     Test the conversion of headers.
     """
     assert MarkdownToConfluenceConverter.convert_list("- element") == "* element"
+    assert MarkdownToConfluenceConverter.convert_list("- *element*") == "* *element*"
+    assert MarkdownToConfluenceConverter.convert_list("* *element*") == "* *element*"
     assert MarkdownToConfluenceConverter.convert_list("  - element") == "** element"
     assert MarkdownToConfluenceConverter.convert_list("1. element") == "# element"
     assert MarkdownToConfluenceConverter.convert_list("2. element") == "## element"
