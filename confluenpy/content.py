@@ -426,7 +426,7 @@ class Page:
         """
         return self.confluence.get_page_id(self.space, self.title)
 
-    def page_exists(self) -> bool:
+    def exists(self) -> bool:
         """
         Check if a page exists in Confluence.
 
@@ -434,6 +434,15 @@ class Page:
         exists: bool - Whether the page exists.
         """
         return self.confluence.page_exists(space=self.space, title=self.title, type="page")
+
+    def page_exists(self) -> bool:
+        """
+        Check if a page exists in Confluence.
+
+        returns:
+        exists: bool - Whether the page exists.
+        """
+        return self.exists()
 
     def update(self, minor_edit: bool = False, full_width: bool = False) -> dict:
         """
