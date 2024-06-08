@@ -147,6 +147,39 @@ class MarkdownToConfluenceConverter:
 
         return converted_line
 
+    @staticmethod
+    def convert_list(text: str) -> str:
+        """
+        Convert a Markdown simple or numbered list to Confluence Wiki markup equivalent.
+
+        Args:
+        text (str): A string containing a list element in Markdown format.
+
+        Returns:
+        str: A string containing the list in Confluence Wiki markup format.
+        """
+
+        def simple_list_match(match: str) -> str:
+            spaces = match.group(1)
+            item = match.group(3)
+            stars = "*" * int(len(spaces) / 2 + 1)
+            return f"{stars} {item}"
+
+        # Use regex to match lines with leading spaces followed by '- item'
+        pattern = re.compile(r"^(\s*)([-*]) (.*)$", re.MULTILINE)
+        text = pattern.sub(simple_list_match, text)
+
+        def numbered_list_match(match: str) -> str:
+            number = int(match.group(1))
+            item = match.group(2)
+            hashes = "#" * number
+            return f"{hashes} {item}"
+
+        # Use regex to match lines with leading numbers followed by a space and text
+        pattern = re.compile(r"^(\d+)\. (.*)$", re.MULTILINE)
+        text = pattern.sub(numbered_list_match, text)
+        return text
+
     @classmethod
     def convert(cls, markdown_text: str) -> PageContent:
         """
@@ -164,10 +197,12 @@ class MarkdownToConfluenceConverter:
         lines = iter(markdown_text.split("\n"))
         for line in lines:
 
+            # Order matters!
             line = cls.convert_emphasis(line)
             line = cls.convert_image(line)
             line = cls.convert_link(line)
             line = cls.convert_header(line)
+            line = cls.convert_list(line)
 
             if cls.is_block_code(line):
                 # Simple approach to capture code block, assuming it starts and ends in the file correctly
