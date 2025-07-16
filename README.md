@@ -10,39 +10,39 @@ ConfluenPy is a Python package that allows you to interact with Atlassian Conflu
 # Example usage
 
 ```python
-    # Example usage
-    confluence = atlassian.Confluence(
-        url='https://example.atlassian.net/',
-        username='your.user@company.com',
-        password=os.getenv('CONFLUENCE_API_TOKEN')
-        )
+# Example usage
+confluence = atlassian.Confluence(
+    url="https://example.atlassian.net/",
+    username="your.user@company.com",
+    password=os.getenv("CONFLUENCE_API_TOKEN"),
+)
 
-    page = Page(title='WonderDocs', space='IsVast', confluence=confluence)
+page = Page(title="WonderDocs", space="IsVast", confluence=confluence)
 
-    # Add a table of contents
-    page.body.toc()
-    # Add a horizontal rule
-    page.body.horizontal_rule()
-    # Takes the Readme.md file and converts it to confluence format
-    with open('README.md', encoding='utf-8') as markdown_text:
-        markdown = MarkdownToConfluenceConverter.convert(markdown_text.read())
-        # Only takes the second section of the markdown file
-        page.body.content += markdown.section(2)
+# Add a table of contents
+page.body.toc()
+# Add a horizontal rule
+page.body.horizontal_rule()
+# Takes the Readme.md file and converts it to confluence format
+with open("README.md", encoding="utf-8") as markdown_text:
+    markdown = MarkdownToConfluenceConverter.convert(markdown_text.read())
+    # Only takes the second section of the markdown file
+    page.body.content += markdown.section(2)
 
-    # Upload any local images referenced in the markdown
-    for file in MarkdownToConfluenceConverter.local_images_to_be_uploaded:
-        page.attach_content(
-            content=file.open("rb"),
-            name=file.name,
-        )
+# Upload any local images referenced in the markdown
+for file in MarkdownToConfluenceConverter.local_images_to_be_uploaded:
+    page.attach_content(
+        content=file.open("rb"),
+        name=file.name,
+    )
 
-    # Adds some more content
-    page.body.heading('h1', "Biggest heading")
-    page.body.block_quote('This is a paragraph')
-    page.body.code_block(title='tt', content='Wonderful code')
+# Adds some more content
+page.body.heading("h1", "Biggest heading")
+page.body.block_quote("This is a paragraph")
+page.body.code_block(title="tt", content="Wonderful code")
 
-    # Update the page
-    page.update()
+# Update the page
+page.update()
 ```
 
 # Installation

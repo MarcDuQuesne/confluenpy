@@ -15,12 +15,12 @@ def confluence(mocker: MockerFixture):
     """
 
     confluence = atlassian.Confluence(
-        url='https://example.atlassian.net/',
-        username='your.user@company.com',
-        password='my_secret_password',
-        )
+        url="https://example.atlassian.net/",
+        username="your.user@company.com",
+        password="my_secret_password",
+    )
 
-    mocker.patch('atlassian.confluence.Confluence.get_page_id', return_value=123)
+    mocker.patch("atlassian.confluence.Confluence.get_page_id", return_value=123)
 
     return confluence
 
@@ -31,7 +31,7 @@ def page(confluence: atlassian.Confluence):
     Fixture to create a confluence connector
     """
 
-    return Page(title='WonderDocs', space='IsVast', confluence=confluence)
+    return Page(title="WonderDocs", space="IsVast", confluence=confluence)
 
 
 @pytest.mark.unit
@@ -45,6 +45,6 @@ def test_page_elements(page: Page):
     # Add a horizontal rule
     page.body.horizontal_rule()
     # Add a header
-    page.body.heading('h1', 'Header')
+    page.body.heading("h1", "Header")
     # Add a paragraph
-    page.body.text('Paragraph')
+    page.body.text("Paragraph")
