@@ -9,6 +9,7 @@ from pathlib import Path
 import validators
 
 from confluenpy.content import PageContent
+from typing import Optional
 
 logger = logging.getLogger(__name__)
 
@@ -51,7 +52,7 @@ class MarkdownToConfluenceConverter:
         return re.match(r".*\!\[.*\]\(.*\.(jpg|jpeg|png|gif|bmp|svg.*)\).*", text)
 
     @staticmethod
-    def convert_image(text: str) -> str:
+    def convert_image(text: str, image_width: Optional[int] = None) -> str:
         """
         Convert a Markdown image to Confluence Wiki markup image.
 
@@ -81,6 +82,11 @@ class MarkdownToConfluenceConverter:
                 if Path(url).exists():
                     logger.warning("Local image detected: %s", url)  # MG possible issue with path. Is this the relative path to the markdown?
                     text = re.sub(match_regex, f"!{local_file.name}!", text)
+
+                    # If image_width is provided, append it to the local file name
+                    if image_width:
+                        text = text[:-1] + f"|width={image_width}!"
+
                     # add the local image to the list of images to be uploaded
                     MarkdownToConfluenceConverter.local_images_to_be_uploaded.append(local_file)
                 else:
@@ -181,7 +187,7 @@ class MarkdownToConfluenceConverter:
         return text
 
     @classmethod
-    def convert(cls, markdown_text: str) -> PageContent:
+    def convert(cls, markdown_text: str, image_width: Optional[int] = None) -> PageContent:
         """
         Convert the markdown to confluence wiki markup.
 
@@ -199,7 +205,7 @@ class MarkdownToConfluenceConverter:
 
             # Order matters!
             line = cls.convert_emphasis(line)
-            line = cls.convert_image(line)
+            line = cls.convert_image(line, image_width=image_width)
             line = cls.convert_link(line)
             line = cls.convert_header(line)
             line = cls.convert_list(line)
