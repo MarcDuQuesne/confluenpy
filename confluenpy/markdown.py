@@ -5,11 +5,11 @@ Module to convert markdown to confluence wiki markup.
 import logging
 import re
 from pathlib import Path
+from typing import Optional
 
 import validators
 
 from confluenpy.content import PageContent
-from typing import Optional
 
 logger = logging.getLogger(__name__)
 

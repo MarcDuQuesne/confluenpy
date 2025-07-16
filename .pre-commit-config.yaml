@@ -1,11 +1,59 @@
 repos:
--   repo: https://github.com/pre-commit/pre-commit-hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v2.3.0
     hooks:
-    -   id: check-yaml
-    -   id: end-of-file-fixer
-    -   id: trailing-whitespace
--   repo: https://github.com/psf/black
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-ast
+      - id: check-xml
+      - id: check-builtin-literals
+      - id: check-yaml
+      - id: check-symlinks
+      - id: check-json
+      - id: check-docstring-first
+      - id: debug-statements
+      - id: detect-private-key
+        # - id: detect-aws-credentials # crashes when files are not encoded in utf-8
+        # args: [--allow-missing-credentials]
+      - id: check-executables-have-shebangs
+      - id: check-added-large-files # Some test data file exceed 5MB
+        args: ["--maxkb=10000"]
+      - id: check-merge-conflict
+      - id: mixed-line-ending
+      - id: no-commit-to-branch
+        args: ["--branch", "main"]
+
+  - repo: https://github.com/psf/black
     rev: 22.10.0
     hooks:
-    -   id: black
+      - id: black
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v2.3.0
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]
+        args: [] # optional: list of Conventional Commits types to allow e.g. [feat, fix, ci, chore, test]
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v8.47.0 # Use the sha / tag you want to point at
+    hooks:
+      - id: eslint
+        additional_dependencies:
+          - eslint@8.47.0
+          - prettier@3.0.2
+        files: \.ts$ # *.js, *.jsx, *.ts and *.tsx
+        types: [file]
+  - repo: https://github.com/awslabs/git-secrets
+    rev: master  # Use the sha / tag you want to point at
+    hooks:
+      - id: git-secrets
+
+  - repo: https://github.com/pre-commit/mirrors-isort
+    rev: v5.10.1
+    hooks:
+      - id: isort
+        args: ["--profile", "black"]
+
+  - repo: https://github.com/asottile/blacken-docs
+    rev: 1.16.0
+    hooks:
+      - id: blacken-docs
