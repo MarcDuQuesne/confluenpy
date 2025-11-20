@@ -109,7 +109,7 @@ def hello_world():
     print("Hello, world!")
 ```"""
 
-    expected_wiki = 'Here is some code:\n\n{code:title=|theme=Default|linenumbers=False|language=python|firstline=1|collapse=False}def hello_world():\n    print("Hello, world!"){code}'
+    expected_wiki = 'Here is some code:\n\n{code:title=|theme=Default|linenumbers=False|language=python|firstline=1|collapse=False}def hello_world():\n    print("Hello, world!"){code}'  # pylint: disable=line-too-long
     converted_markup = "\n".join(MarkdownToConfluenceConverter.convert(markdown).content)
     assert converted_markup == expected_wiki, "Code block conversion failed"
 
