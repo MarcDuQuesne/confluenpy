@@ -217,7 +217,11 @@ class MarkdownToConfluenceConverter:
                 line = next(lines)  # Move to the next line to start capturing the code
                 while not cls.is_block_code(line):
                     code_content.append(line)
-                    line = next(lines)
+                    try:
+                        line = next(lines)
+                    except StopIteration:
+                        logger.warning("Code block not closed properly.")
+                        break  # End of file reached without closing ```
                 confluence_content.code_block(title="", content="\n".join(code_content), language=language)
             # elif cls.is_image(line):
             #     image = re.search(r"(\!\[.*\]\(.*\.(jpg|jpeg|png|gif|bmp|svg\??[a-z=]*)\))", line).group(0)

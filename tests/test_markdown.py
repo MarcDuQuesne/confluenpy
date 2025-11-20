@@ -95,3 +95,40 @@ def test_convert_link():
     Test the conversion of links.
     """
     assert MarkdownToConfluenceConverter.convert_link("[Link](link)") == "[Link|link]"
+
+
+@pytest.mark.unit
+def test_convert_code_block():
+    """
+    Test the conversion of code blocks.
+    """
+    markdown = """Here is some code:
+
+```python
+def hello_world():
+    print("Hello, world!")
+```"""
+
+    expected_wiki = 'Here is some code:\n\n{code:title=|theme=Default|linenumbers=False|language=python|firstline=1|collapse=False}def hello_world():\n    print("Hello, world!"){code}'  # pylint: disable=line-too-long
+    converted_markup = "\n".join(MarkdownToConfluenceConverter.convert(markdown).content)
+    assert converted_markup == expected_wiki, "Code block conversion failed"
+
+
+@pytest.mark.unit
+def test_missing_end_code_block(caplog: pytest.LogCaptureFixture):
+    """
+    Test the conversion of code blocks missing an end delimiter.
+    """
+
+    caplog.set_level("WARNING")
+
+    markdown = """Here is some code:
+
+```python
+def hello_world():
+    print("Hello, world!")
+"""
+
+    MarkdownToConfluenceConverter.convert(markdown)
+
+    assert "Code block not closed properly" in caplog.text, "Missing code block warning not logged"
