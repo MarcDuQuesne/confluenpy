@@ -41,7 +41,7 @@ def test_string_conversion():
 2. numbered list 2
 
 [here](https://www.google.com)
-![excalidraw](excalidraw.png)
+![python](python.png)
 
 """
 
@@ -57,7 +57,7 @@ h2. Header
 ## numbered list 2
 
 [here|https://www.google.com]
-![excalidraw|excalidraw.png]
+![python|python.png]
 
 """
 

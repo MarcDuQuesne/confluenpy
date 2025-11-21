@@ -52,7 +52,7 @@ class MarkdownToConfluenceConverter:
         return re.match(r".*\!\[.*\]\(.*\.(jpg|jpeg|png|gif|bmp|svg.*)\).*", text)
 
     @staticmethod
-    def convert_image(text: str, image_width: Optional[int] = None) -> str:
+    def convert_image(text: str, image_width: Optional[int] = None, root: Path = None) -> str:
         """
         Convert a Markdown image to Confluence Wiki markup image.
 
@@ -78,9 +78,9 @@ class MarkdownToConfluenceConverter:
                 text = re.sub(match_regex, f"!{url}!", text)
             except AssertionError as err:
                 # check if the image is local
-                local_file = Path(url)
-                if Path(url).exists():
-                    logger.warning("Local image detected: %s", url)  # MG possible issue with path. Is this the relative path to the markdown?
+                local_file = root / url
+                if Path(local_file).exists():
+                    logger.warning("Local image detected: %s", local_file)
                     text = re.sub(match_regex, f"!{local_file.name}!", text)
 
                     # If image_width is provided, append it to the local file name
@@ -187,7 +187,7 @@ class MarkdownToConfluenceConverter:
         return text
 
     @classmethod
-    def convert(cls, markdown_text: str, image_width: Optional[int] = None) -> PageContent:
+    def convert(cls, markdown_text: str, image_width: Optional[int] = None, root: Path = None) -> PageContent:
         """
         Convert the markdown to confluence wiki markup.
 
@@ -205,7 +205,7 @@ class MarkdownToConfluenceConverter:
 
             # Order matters!
             line = cls.convert_emphasis(line)
-            line = cls.convert_image(line, image_width=image_width)
+            line = cls.convert_image(line, image_width=image_width, root=root)
             line = cls.convert_link(line)
             line = cls.convert_header(line)
             line = cls.convert_list(line)
