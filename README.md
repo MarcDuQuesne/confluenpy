@@ -24,10 +24,11 @@ page.body.toc()
 # Add a horizontal rule
 page.body.horizontal_rule()
 # Takes the Readme.md file and converts it to confluence format
-with open("README.md", encoding="utf-8") as markdown_text:
-    markdown = MarkdownToConfluenceConverter.convert(markdown_text.read())
-    # Only takes the second section of the markdown file
-    page.body.content += markdown.section(2)
+markdown = MarkdownToConfluenceConverter.convert_file(
+    Path(__file__).parent / "README.md"
+)
+# Only takes the second section of the markdown file
+page.body.content += markdown.section(2)
 
 # Upload any local images referenced in the markdown
 for file in MarkdownToConfluenceConverter.local_images_to_be_uploaded:
