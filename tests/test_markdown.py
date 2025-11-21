@@ -61,7 +61,7 @@ h2. Header
 
 """
 
-    converted_markup = "\n".join(MarkdownToConfluenceConverter.convert(markdown).content)
+    converted_markup = "\n".join(MarkdownToConfluenceConverter.convert(markdown, root=Path("data")).content)
 
     assert converted_markup == wiki_markdown, "Conversion failed"
 

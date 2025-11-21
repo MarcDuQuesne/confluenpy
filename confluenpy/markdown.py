@@ -187,6 +187,23 @@ class MarkdownToConfluenceConverter:
         return text
 
     @classmethod
+    def convert_file(cls, markdown: Path, image_width: Optional[int] = None, encoding: str = "utf-8") -> PageContent:
+        """
+        Convert the markdown file to confluence wiki markup.
+
+        params:
+        markdown_path: Path - The path to the markdown file to convert.
+
+        returns:
+        confluence_content: ConfluencePageContent - The confluence wiki markup.
+        """
+
+        markdown_text = markdown.read_text(encoding=encoding)
+        root = markdown.parent
+
+        return cls.convert(markdown_text, image_width=image_width, root=root)
+
+    @classmethod
     def convert(cls, markdown_text: str, image_width: Optional[int] = None, root: Path = None) -> PageContent:
         """
         Convert the markdown to confluence wiki markup.

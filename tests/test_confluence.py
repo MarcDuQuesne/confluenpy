@@ -19,14 +19,13 @@ def confluence():
     """
     Confluence instance
     """
-    # return atlassian.Confluence(
-    #     url=os.getenv("CONFLUENCE_URL"), username=os.getenv("CONFLUENCE_USERNAME"), password=os.getenv("CONFLUENCE_API_TOKEN")
-    # )
-    return atlassian.Confluence(url="https://your-confluence-instance.atlassian.net/wiki", username="", password="")
+    return atlassian.Confluence(
+        url=os.getenv("CONFLUENCE_URL"), username=os.getenv("CONFLUENCE_USERNAME"), password=os.getenv("CONFLUENCE_API_TOKEN")
+    )
 
 
 @pytest.mark.end_to_end
-# @requires_existing_confluence
+@requires_existing_confluence
 def test_publish_page(confluence: atlassian.Confluence):
     """
     Test publishing a page to confluence
@@ -48,9 +47,8 @@ def test_publish_page(confluence: atlassian.Confluence):
 
     # Add the readme
     readme = Path(__file__).parent / "data" / "Readme.md"
-    with readme.open(encoding="utf-8") as markdown_text:
-        markdown = MarkdownToConfluenceConverter.convert(markdown_text.read(), root=readme.parent)
-        page.body.extend(markdown)
+    markdown = MarkdownToConfluenceConverter.convert_file(readme)
+    page.body.extend(markdown)
 
     # Upload any local images referenced in the markdown
     for file in MarkdownToConfluenceConverter.local_images_to_be_uploaded:
@@ -60,6 +58,6 @@ def test_publish_page(confluence: atlassian.Confluence):
         )
 
     # Finally, Update the page
-    # status = page.update()
+    status = page.update()
 
-    # assert status["type"] == "page", status
+    assert status["type"] == "page", status
