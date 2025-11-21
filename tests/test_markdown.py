@@ -41,7 +41,7 @@ def test_string_conversion():
 2. numbered list 2
 
 [here](https://www.google.com)
-![excalidraw](excalidraw.png)
+![python](python.png)
 
 """
 
@@ -57,11 +57,11 @@ h2. Header
 ## numbered list 2
 
 [here|https://www.google.com]
-![excalidraw|excalidraw.png]
+![python|python.png]
 
 """
 
-    converted_markup = "\n".join(MarkdownToConfluenceConverter.convert(markdown).content)
+    converted_markup = "\n".join(MarkdownToConfluenceConverter.convert(markdown, root=Path("data")).content)
 
     assert converted_markup == wiki_markdown, "Conversion failed"
 

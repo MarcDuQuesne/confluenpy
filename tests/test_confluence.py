@@ -1,6 +1,7 @@
 """
 E2e test, publishing a page to confluence
 """
+
 import os
 from pathlib import Path
 
@@ -45,10 +46,9 @@ def test_publish_page(confluence: atlassian.Confluence):
     page.body.horizontal_rule()
 
     # Add the readme
-    readme = Path(__file__).parent.parent / "README.md"
-    with readme.open(encoding="utf-8") as markdown_text:
-        markdown = MarkdownToConfluenceConverter.convert(markdown_text.read())
-        page.body.extend(markdown)
+    readme = Path(__file__).parent / "data" / "Readme.md"
+    markdown = MarkdownToConfluenceConverter.convert_file(readme)
+    page.body.extend(markdown)
 
     # Upload any local images referenced in the markdown
     for file in MarkdownToConfluenceConverter.local_images_to_be_uploaded:
